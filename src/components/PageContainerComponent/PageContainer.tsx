@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native-ui-lib';
-import { useEffect } from 'react';
-import { styles } from './PageContainer.style';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { styles } from './PageContainer.style';
+
 interface IPageContainer {
   children: any;
 }

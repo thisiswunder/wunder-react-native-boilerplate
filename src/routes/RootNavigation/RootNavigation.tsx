@@ -19,7 +19,7 @@ export default function RootNavigation(): JSX.Element {
       />
       <Stack.Navigator
         headerMode="screen"
-        keyboardHandlingEnabled={true}
+        keyboardHandlingEnabled
         screenOptions={{ headerTitleAlign: 'center', headerTransparent: true }}>
         <Stack.Screen name="Home" component={HomePage} options={{}} />
       </Stack.Navigator>
