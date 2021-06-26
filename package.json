@@ -7,12 +7,14 @@
     "ios": "npx react-native run-ios",
     "start": "npx react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
     "test-ios": "cd ios && pod install --repo-update && cd .. && npx react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle --assets-dest ios",
     "test-android": "cd android && ./gradlew clean && cd .. && npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && rm -rf android/app/src/main/res/drawable-*/node_modules_* && rm -rf android/app/src/main/res/drawable-*/src_assets* && rm -rf android/app/src/main/res/raw",
     "clean-build": "rm -rf ./node_modules && cd ios && rm -rf ./Pods && cd .. && npm i && cd ios && pod install --repo-update && cd .. && cd android && ./gradlew clean && cd .. && npm run test-ios && npm run test-android",
     "create-page": "node ./scripts/createPage.js --name=$NAME",
-    "create-component": "node ./scripts/createComponent.js --name=$NAME"
+    "create-component": "node ./scripts/createComponent.js --name=$NAME",
+    "create-store": "node ./scripts/createStore.js --name=$NAME",
+    "release": "standard-version"
   },
   "dependencies": {
     "@react-native-community/blur": "^3.6.0",
@@ -39,21 +41,34 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
+    "@commitlint/config-conventional": "^12.1.4",
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.64.5",
     "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
     "babel-jest": "^26.6.3",
     "babel-plugin-module-resolver": "^4.1.0",
+    "commitlint": "^12.1.4",
     "eslint": "^7.29.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "lint-staged": "^11.0.0",
     "metro-react-native-babel-preset": "^0.64.0",
     "prettier": "^2.3.1",
     "react-native-flipper": "^0.95.0",
+    "react-native-version": "^4.0.0",
     "react-test-renderer": "17.0.1",
+    "standard-version": "^9.3.0",
     "typescript": "^3.8.3",
     "yargs": "^17.0.1"
   },
@@ -71,15 +86,67 @@
       "node"
     ]
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
     "./src/*.{ts,tsx}": [
       "npx prettier --write",
-      "eslint src/*.js --fix-dry-run"
+      "eslint src/*.tsx --fix-dry-run"
     ]
+  },
+  "standard-version": {
+    "commit-all": true,
+    "header": "# wunderboilerplate Mobile App Changelog\n",
+    "types": [
+      {
+        "type": "feat",
+        "section": ":sparkles: Features"
+      },
+      {
+        "type": "fix",
+        "section": ":bug: Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "section": ":wrench: Chore"
+      },
+      {
+        "type": "docs",
+        "section": ":books: Documentation"
+      },
+      {
+        "type": "style",
+        "section": ":gem: Styling"
+      },
+      {
+        "type": "refactor",
+        "section": ":hammer: Refactor"
+      },
+      {
+        "type": "perf",
+        "section": ":rocket: Performance"
+      },
+      {
+        "type": "test",
+        "section": ":rotating_light: Test"
+      }
+    ],
+    "compareUrlFormat": "{{previousTag}}...{{currentTag}}",
+    "commitUrlFormat": "{{hash}}",
+    "issueUrlFormat": "{{prefix}}{{id}}",
+    "releaseCommitMessageFormat": "build(release): {{currentTag}}",
+    "scripts": {
+      "prerelease": "npm i",
+      "postchangelog": "react-native-version && node scripts/parseChangeLog.js"
+    }
   }
 }

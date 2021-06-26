@@ -1,21 +1,27 @@
 const yargs = require('yargs');
 const fs = require('fs');
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const n = capitalizeFirstLetter(yargs.argv.name);
+
 const tsxFile = `
 import React from 'react';
 import { View, Text } from 'react-native-ui-lib';
 import { useEffect } from 'react';
-import { styles } from './${yargs.argv.name}.style';
+import { styles } from './${n}.style';
 
-export default function ${yargs.argv.name}() {
+export default function ${n}(): JSX.Element {
 
   useEffect(() => {
-    console.log("${yargs.argv.name} Component Loaded")
+    console.log("${n} Component Loaded")
   }, []);
 
   return (
     <View>
-      <Text>${yargs.argv.name}</Text>
+      <Text>${n}</Text>
     </View>
   );
 } 
@@ -27,21 +33,24 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({});
 `;
 
-fs.mkdir(`src/components/${yargs.argv.name}`, {recursive: true}, err => {
+const importFile = `export { default as ${n}Component } from './${n}Component/${n}';`;
+
+fs.mkdir(`src/components/${n}Component`, { recursive: true }, (err) => {
   if (err) throw err;
+  fs.writeFile(`src/components/${n}Component/${n}.tsx`, tsxFile, (err) => {
+    if (err) throw err;
+  });
+
   fs.writeFile(
-    `src/components/${yargs.argv.name}/${yargs.argv.name}.tsx`,
-    tsxFile,
-    err => {
+    `src/components/${n}Component/${n}.style.tsx`,
+    styleFile,
+    (err) => {
       if (err) throw err;
     },
   );
 
-  fs.writeFile(
-    `src/components/${yargs.argv.name}/${yargs.argv.name}.style.tsx`,
-    styleFile,
-    err => {
-      if (err) throw err;
-    },
-  );
+  fs.appendFile('src/components/index.tsx', importFile, function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
 });

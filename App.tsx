@@ -9,12 +9,13 @@
  */
 import 'react-native-gesture-handler';
 import { enableScreens } from 'react-native-screens';
-enableScreens();
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigationProvider } from '@routes';
 
-const App = () => {
+enableScreens();
+
+const App: React.FC<Record<string, unknown>> = () => {
   return (
     <SafeAreaProvider>
       <RootNavigationProvider />
