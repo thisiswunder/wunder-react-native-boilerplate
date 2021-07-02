@@ -44,6 +44,10 @@ module.exports = {
     'react/display-name': 'off',
     'react-native/no-inline-styles': ['error', {}],
     'no-console': ['error', {}],
+    'react/jsx-props-no-spreading': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
   },
   plugins: ['@typescript-eslint', 'import'],
 };

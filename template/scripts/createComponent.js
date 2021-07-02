@@ -8,12 +8,12 @@ function capitalizeFirstLetter(string) {
 const n = capitalizeFirstLetter(yargs.argv.name);
 
 const tsxFile = `
-import React from 'react';
+import React, { useEffect }  from 'react';
 import { View, Text } from 'react-native-ui-lib';
-import { useEffect } from 'react';
+import { P${n}} from './${n}.props';
 import { styles } from './${n}.style';
 
-export default function ${n}(): JSX.Element {
+export default function ${n}({ label }: P${n}): JSX.Element {
 
   useEffect(() => {
     console.log("${n} Component Loaded")
@@ -21,7 +21,7 @@ export default function ${n}(): JSX.Element {
 
   return (
     <View>
-      <Text>${n}</Text>
+      <Text>{label}</Text>
     </View>
   );
 } 
@@ -31,6 +31,13 @@ const styleFile = `
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({});
+`;
+
+const propFile = `
+export interface P${n} {
+  label: string;
+}
+
 `;
 
 const importFile = `export { default as ${n}Component } from './${n}Component/${n}';`;
@@ -44,6 +51,14 @@ fs.mkdir(`src/components/${n}Component`, { recursive: true }, (err) => {
   fs.writeFile(
     `src/components/${n}Component/${n}.style.tsx`,
     styleFile,
+    (err) => {
+      if (err) throw err;
+    },
+  );
+
+  fs.writeFile(
+    `src/components/${n}Component/${n}.props.tsx`,
+    propFile,
     (err) => {
       if (err) throw err;
     },

@@ -70,6 +70,24 @@
       ],
       "@assets/*": [
         "./src/assets/*"
+      ],
+      "@controllers": [
+        "./src/controllers"
+      ],
+      "@controllers/*": [
+        "./src/controllers/*"
+      ],
+      "@providers": [
+        "./src/providers"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
+      ],
+      "@theme": [
+        "./src/theme"
+      ],
+      "@theme/*": [
+        "./src/theme/*"
       ]
     },
   },
