@@ -1,46 +1,58 @@
-const yargs = require('yargs');
-const fs = require('fs');
+import {mkdir, writeFile, appendFile} from 'fs';
 
-function capitalizeFirstLetter(string) {
+const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
-const n = capitalizeFirstLetter(yargs.argv.name);
+const createTsxFile = _name => {
+  return `
+  import create from 'zustand'
+  import { T${_name} } from './${_name}.type';
+  
+  export const ${_name} = create<T${_name}>((set) => ({
+    bears: 0,
+    increasePopulation: () => set(state => ({ bears: state.bears + 1 })),
+    removeAllBears: () => set({ bears: 0 })
+  }))
+  `;
+};
 
-const tsxFile = `
-import create from 'zustand'
-import { T${n} } from './${n}.type';
+const createTypeFile = _name => {
+  return `
+  export type T${_name} = {
+    bears: number;
+    increasePopulation: () => void;
+    removeAllBears: () => void;
+  }
+  `;
+};
 
-const ${n} = create<T${n}>((set) => ({
-  bears: 0,
-  increasePopulation: () => set(state => ({ bears: state.bears + 1 })),
-  removeAllBears: () => set({ bears: 0 })
-}))
-export default ${n};
-`;
+const createAppendLine = _name => {
+  return `export { ${_name} as use${_name}} from './${_name}Store/${_name}';`;
+};
 
-const typeFile = `
-export type T${n} = {
-  bears: number;
-  increasePopulation: () => void;
-  removeAllBears: () => void;
-}
-`;
-
-const importFile = `export { default as use${n}} from './${n}Store/${n}';`;
-
-fs.mkdir(`src/store/${n}Store`, { recursive: true }, (err) => {
-  if (err) throw err;
-  fs.writeFile(`src/store/${n}Store/${n}.tsx`, tsxFile, (err) => {
+const createFiles = (_name, _tsxFile, _typeFile, _appendLine) => {
+  mkdir(`src/stores/${_name}Store`, {recursive: true}, err => {
     if (err) throw err;
+    writeFile(`src/stores/${_name}Store/${_name}.tsx`, _tsxFile, _err => {
+      if (_err) throw _err;
+      console.log(`${_name}Store.tsx file create under /stores/${_name}/`);
+    });
+    writeFile(`src/stores/${_name}Store/${_name}.type.tsx`, _typeFile, _err => {
+      if (_err) throw _err;
+      console.log(`${_name}Store.type.tsx file create under /stores/${_name}/`);
+    });
+    appendFile('src/stores/index.tsx', _appendLine, _err => {
+      if (_err) throw _err;
+      console.log(`${_name}Store is appended to /stores/index.tsx`);
+    });
   });
+};
 
-  fs.writeFile(`src/store/${n}Store/${n}.type.tsx`, typeFile, (err) => {
-    if (err) throw err;
-  });
-
-  fs.appendFile('src/store/index.tsx', importFile, function (err) {
-    if (err) throw err;
-    console.log('Saved!');
-  });
-});
+export const createStore = name => {
+  const _name = capitalizeFirstLetter(name);
+  const tsxFile = createTsxFile(_name);
+  const typeFile = createTypeFile(_name);
+  const appendLine = createAppendLine(_name);
+  createFiles(_name, tsxFile, typeFile, appendLine);
+};

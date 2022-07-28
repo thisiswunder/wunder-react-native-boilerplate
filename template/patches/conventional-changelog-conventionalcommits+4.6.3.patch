@@ -1,0 +1,14 @@
+diff --git a/node_modules/conventional-changelog-conventionalcommits/templates/header.hbs b/node_modules/conventional-changelog-conventionalcommits/templates/header.hbs
+index a4d6ec4..655a62b 100644
+--- a/node_modules/conventional-changelog-conventionalcommits/templates/header.hbs
++++ b/node_modules/conventional-changelog-conventionalcommits/templates/header.hbs
+@@ -1,7 +1,7 @@
+ {{#if isPatch~}}
+-  ###
+-{{~else~}}
+   ##
++{{~else~}}
++  #
+ {{~/if}} {{#if @root.linkCompare~}}
+   [{{version}}]({{compareUrlFormat}})
+ {{~else}}

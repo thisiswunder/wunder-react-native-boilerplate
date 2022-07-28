@@ -1,0 +1,20 @@
+name: Wunder Boilerplate CI - Send To Firebase App Distribution
+on:
+  workflow_call:
+
+jobs:
+  send-ios:
+    name: Send iOS Package
+    runs-on: self-hosted
+    steps:
+      - run: |
+          echo "Sleeping for 10"
+          sleep 10
+  
+  send-android:
+    name: Send Android Package
+    runs-on: self-hosted
+    steps:
+      - run: |
+          echo "Sleeping for 10"
+          sleep 10

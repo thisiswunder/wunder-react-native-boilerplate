@@ -1,0 +1,48 @@
+name: Wunder Boilerplate CI - Send To Firebase App Distribution
+on:
+  workflow_call:
+
+jobs:
+  build-ios:
+    name: Buid iOS Binary
+    runs-on: self-hosted
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - name: Restore Pods cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            example/ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+      
+      - name: Install Pods
+        run: cd ios && pod install && cd ..
+
+      - name: Buid iOS Binary
+        run: fastlane ios beta
+  
+  build-android:
+    name: Buid Android Binary
+    runs-on: self-hosted
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - name: Restore Gradle cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - name: Buid Android Binary
+        run: fastlane android beta

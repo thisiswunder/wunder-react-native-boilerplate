@@ -1,4 +1,0 @@
- 🚿 Chore
-
-* home page & landing page examples
-* type fixes

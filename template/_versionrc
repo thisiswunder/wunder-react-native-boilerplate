@@ -1,0 +1,47 @@
+{
+  "types": [
+    {
+      "type": "feat",
+      "section": ":sparkles: Features"
+    },
+    {
+      "type": "fix",
+      "section": ":bug: Bug Fixes"
+    },
+    {
+      "type": "chore",
+      "section": ":wrench: Chore"
+    },
+    {
+      "type": "docs",
+      "section": ":books: Documentation"
+    },
+    {
+      "type": "style",
+      "section": ":gem: Styling"
+    },
+    {
+      "type": "refactor",
+      "section": ":hammer: Refactor"
+    },
+    {
+      "type": "test",
+      "section": ":rotating_light: Test"
+    },
+    {
+      "type": "ci",
+      "section": ":rocket: Performance"
+    }
+  ],
+  "compareUrlFormat": "https://github.com/thisiswunder/wunder-boilerplate/compare/{{previousTag}}...{{currentTag}}",
+  "commitUrlFormat": "https://github.com/thisiswunder/wunder-boilerplate/commit/{{hash}}",
+  "issueUrlFormat": "https://github.com/conventional-changelog/standard-version/issues/{{id}}",
+  "releaseCommitMessageFormat": "build(release): {{currentTag}}",
+  "userUrlFormat": "{{host}}/{{user}}",
+  "issuePrefixes": [
+    "#"
+  ],
+  "scripts": {
+    "postchangelog": "node scripts/parseChangeLog.js"
+  }
+}

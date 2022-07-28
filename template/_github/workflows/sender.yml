@@ -1,0 +1,21 @@
+name: Wunder Boilerplate CI - Send To Firebase App Distribution
+on:
+  push:
+    branches: [test-release]
+
+jobs:
+  init-repo:
+    name: Init Repo
+    uses: ./.github/workflows/install-dependencies.yml
+  build-binaries:
+    name: Build Binaries
+    uses: ./.github/workflows/build-binaries.yml
+    needs: [init-repo]
+  send-binaries:
+    name: Send Binaries
+    uses: ./.github/workflows/deliver.yml
+    needs: [init-repo, build-binaries]
+  slack-notification:
+    name: Send Slack Notification
+    uses: ./.github/workflows/notify.yml
+    needs: [init-repo, build-binaries, send-binaries]

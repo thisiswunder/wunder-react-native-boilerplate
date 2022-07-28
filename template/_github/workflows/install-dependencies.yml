@@ -1,0 +1,85 @@
+name: Wunder Boilerplate CI - Send To Firebase App Distribution
+on:
+  workflow_call:
+    
+jobs:
+  checkout-to-branch:
+    name: Checkout to branch
+    runs-on: self-hosted
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+  setup-node-env:
+    name: Setup Node Env
+    runs-on: self-hosted
+    needs: [checkout-to-branch]
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 16.14.0
+          check-latest: true
+          registry-url: https://npm.pkg.github.com/
+
+  install-npm-packages:
+    name: Install Packages
+    runs-on: self-hosted
+    needs: [setup-node-env]
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore node_modules from cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install node_modules
+        run: yarn install --frozen-lockfile --cwd ..
+
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v1
+        continue-on-error: true
+
+  install-ruby-packages:
+    name: Install Ruby Packages
+    runs-on: self-hosted
+    needs: [install-npm-packages, setup-node-env]
+    steps:
+      # - run: |
+      #     echo "Sleeping for 10"
+      #     sleep 10
+      - name: Setup Ruby (bundle)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+          working-directory: ios
+        
+      - name: Gem caching
+        uses: actions/cache@v3
+        continue-on-error: true
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+            
+      - name: bundle install
+        run: bundle install

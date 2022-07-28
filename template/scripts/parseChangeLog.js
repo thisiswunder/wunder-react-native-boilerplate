@@ -1,5 +1,6 @@
-const parseChangelog = require('changelog-parser');
 const fs = require('fs');
+
+const parseChangelog = require('changelog-parser');
 
 parseChangelog(
   {
@@ -7,8 +8,10 @@ parseChangelog(
     removeMarkdown: true,
   },
   function (err, result) {
-    if (err) throw err;
-    let { body } = result.versions[0];
+    if (err) {
+      throw err;
+    }
+    let {body} = result.versions[0];
     body = body.replace(/\s*\([^()]*\)/g, '');
     body = body.replace(/\s*\([^()]*\)/g, '');
     body = body.replace(':wrench:', '🚿');

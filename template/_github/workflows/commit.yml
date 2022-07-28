@@ -1,0 +1,11 @@
+name: Wunder Boilerplate CI - Send To Firebase App Distribution
+on:
+  workflow_call:
+    
+jobs:
+  commit-push:
+    name: Push Commit
+    runs-on: self-hosted
+    steps:
+      - name: push aftermath residues
+        run: fastlane commit_push

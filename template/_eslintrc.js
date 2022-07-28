@@ -1,53 +1,47 @@
 module.exports = {
   root: true,
+  extends: ['@react-native-community', 'prettier'],
   parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'reanimated', 'react-native'],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: './',
-  },
-  settings: {
-    react: {
-      version: 'detect',
+    ecmaFeatures: {
+      jsx: false,
+      tsx: true,
     },
-    'import/resolver': {
-      typescript: {},
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        paths: [
-          './src/components/',
-          './src/routes/',
-          './src/screens/',
-          './src/store/',
-          './src/assets/',
+  },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+        'react-hooks/exhaustive-deps': 'off',
+        '@typescript-eslint/no-unused-vars': 'warn',
+        'prettier/prettier': [
+          'error',
+          {},
+          {
+            arrowParens: 'avoid',
+            bracketSameLine: true,
+            bracketSpacing: false,
+            singleQuote: true,
+            trailingComma: 'all',
+          },
         ],
       },
     },
-    'babel-module': {},
-    'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-  },
-  extends: [
-    '@react-native-community',
-    'airbnb-typescript',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-    'prettier',
-    'plugin:import/typescript',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   rules: {
-    'import/no-extraneous-dependencies': 'off',
-    'import/prefer-default-export': 'off',
-    'react/display-name': 'off',
-    'react-native/no-inline-styles': ['error', {}],
-    'no-console': ['error', {}],
-    'react/jsx-props-no-spreading': 'off',
-    '@typescript-eslint/no-unsafe-return': 'off',
-    '@typescript-eslint/no-floating-promises': 'off',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
+    'reanimated/js-function-in-worklet': 2,
+    'global-require': 'off',
+    'react/jsx-filename-extension': ['error', {extensions: ['.ts', '.tsx']}],
+    'no-use-before-define': [
+      'error',
+      {functions: true, classes: true, variables: false},
+    ],
+    'react-native/no-unused-styles': 2,
+    'react-native/no-inline-styles': 2,
+    'react-native/no-color-literals': 2,
   },
-  plugins: ['@typescript-eslint', 'import'],
 };
